@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe Table</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    img {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    button {
+      padding: 6px 12px;
+      border: none;
+      background: #007bff;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Recipe Table</h1>
+  <table id="recipeTable">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Name</th>
+        <th>Image</th>
+        <th>Rating</th>
+        <th>Price</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadRecipes() {
+      try {
+        const response = await fetch("https://dummyjson.com/recipes");
+        const data = await response.json();
+        const recipes = data.recipes;
+        const tbody = document.querySelector("#recipeTable tbody");
+
+        recipes.forEach((recipe, index) => {
+          const row = document.createElement("tr");
+
+          // Generate random triple digit price
+          const price = Math.floor(100 + Math.random() * 900);
+
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${recipe.name}</td>
+            <td><img src="${recipe.image}" alt="${recipe.name}"></td>
+            <td>${recipe.rating}</td>
+            <td>$${price}</td>
+            <td><button onclick="addToCart('${recipe.name}')">Add to Cart</button></td>
+          `;
+
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    }
+
+    function addToCart(name) {
+      alert("${name} added to cart");
+    }
+
+    loadRecipes();
+  </script>
+</body>
+</html>
